@@ -28,7 +28,8 @@ from PIL import Image
 im = Image.open("fichier.jpg")
 im.show()
 
-#sauver dans un fichier
+#créer une nouvelle image
+im=Image.new("RGB",(width,height))
 
 #récupérer la taille d'une image
 im.size => (width, height)
