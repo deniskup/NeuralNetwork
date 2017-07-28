@@ -1,0 +1,43 @@
+*** Basiques ***
+if (condition):
+	instructions
+
+for i in range(n):
+	instructions 
+	#executé pour i allant de 0 à n-1
+
+#gérer les tableaux
+myList=[]
+myList.append(1)
+print myList[0]
+#pour deux dimensions, juste liste de listes
+
+*** Aléatoire
+from random import *
+
+random() #réel aléatoire entre 0 et 1
+randint(n,m) #nombre entier au hasard entre n et m
+
+
+*** Images ***
+
+#charger la bibliothèque
+from PIL import Image
+
+#Ouvrir et afficher une image (utilise l'afficheur par défaut)
+im = Image.open("fichier.jpg")
+im.show()
+
+#sauver dans un fichier
+
+#récupérer la taille d'une image
+im.size => (width, height)
+
+
+#acceder aux pixels d'une image et les changer
+pix = im.load()
+print im.size #Get the width and hight of the image for iterating over
+print pix[x,y] #Get the RGBA Value of the a pixel of an image
+pix[x,y] = value # Set the RGBA Value of the image (tuple)
+im.save("fichier.png") # Save the modified pixels as png
+
