@@ -56,7 +56,7 @@ def deriv(x):
 	return activ(x)*(1-activ(x))
 
 #load image to obtain size
-im = Image.open("imageGO.jpg")
+im = Image.open("colors.jpg")
 (width,height)=im.size
 pixin=im.load()
 
