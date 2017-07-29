@@ -1,0 +1,8 @@
+
+
+1)faire de la backpropagation sur tous les pixels les uns après les autres semble mauvais, pourquoi ?
+   -> parce qu'on finit par plein de blancs et donc il vise le blanc uniquement !
+   
+2) à tester pour voir si c'est mieux que random: faire tous les pixels, mais dans un ordre aléatoire ?
+
+
