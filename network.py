@@ -145,20 +145,18 @@ def backprop(x,y):
 	for i in range(outputs):
 		delta_out.append(delta_output(i,targets[i]))
 	delta_inter=[]
-	for lrev in range(layers):
+	for lay in reversed(range(1,layers+1)):
 	#todo from here: reverse loop doing back propagation
 	##
-	##
-	for i in range(inter):
-		delta_inter.append(delta_mid(i,delta_out))
-	#changing the weights
-	#using the formula w-= rate*o_i*delta_j
-	for j in range(outputs):
+	## below is incorrect, to be fixed
+		inp,out=inout(lay)
 		for i in range(inter):
-			weight2[i][j]-= rate*intervalues[i]*delta_out[j]
-	for j in range(inter):
-		for i in range(inputs):
-			weight1[i][j]-= rate*invalues[i]*delta_inter[j]		
+			delta_inter.append(delta_mid(lay,i,delta_out))
+		#changing the weights
+		#using the formula w-= rate*o_i*delta_j
+		for j in range(out):
+			for i in range(inter):
+				weight[lay][i][j]-= rate*intervalues[i]*delta_out[j]
 
 
 
