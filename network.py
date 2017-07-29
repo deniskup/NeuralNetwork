@@ -15,41 +15,53 @@ from math import *
 # one intermediate layer, here 5 neurons
 
 inputs=2
+layers=int(raw_input("Nombre de couches ? ")) # number of intermediate layers
 inter=int(raw_input("Neurones dans la couche intermediaire ? ")) # number of neurons on the intermediate layer (5 OK)
 outputs=3
+
 
 
 #number of backpropagations (100 000 OK)
 nrand=int(raw_input("Nombres de pixels pour l'entrainement ? "))
 
-weight1=[] #two-dimensional array for inputs to inter
-weight2=[] #two-dimensional array for inter to output
+#three dimensional array: weight[i][j][k] is the weight of layer i, from neuron j to neuron k
+# i can go from 0 to inter
+weights=[] 
+
 
 #values of the neurons
-invalues=[0,0]
-intervalues=[]
-outvalues=[]
+#double dimension list: 0 is the input layer, 1 to inter is intermediate, inter+1 is the output layer
+values=[[None,None]] # placeholders for inputs
+for lay in range(layers):
+	values.append([None]*inter) #intermediate layers
+values.append([None,None,None]) #outputs
 
 #learning rate (1 OK)
 rate=float(raw_input("Vitesse d'apprentissage ? "))
 
 
+#number of inputs and outputs for a layer
+def inout(lay):
+	inp=inputs
+ 	if (lay>0):
+ 		inp=inter
+ 	out=inter
+ 	if(lay==layers):
+ 		out=outputs
+ 	return inp,out
+
 #choose all weights randomly
 #first weight1
-for i in range(inputs):
- 	wl=[]
- 	for j in range(inter):
- 		wl.append(random())
- 	weight1.append(wl)
-#then weight2
-for i in range(inter):
- 	wl=[]
- 	for j in range(outputs):
- 		wl.append(random())
- 	weight2.append(wl)
- 
-
-
+for lay in range(layers+1):
+	inp,out=inout(lay)
+	wlay=[]
+ 	for i in range(inp):
+ 		wi=[]
+ 		for j in range(out):
+ 			wi.append(random())
+ 		wlay.append(wi)
+ 	weights.append(wlay)
+ 	
 #activation functions
 #identity
 def activid(x):
@@ -78,33 +90,24 @@ def normcol(c):
 def getcol(x):
 	return int(floor(x*256))
 
+
 #run the neural network on inputs [x,y], updates values of the network,
 # result stored in outvalues, not normalized
 def run(x,y):
 	#normalize the input to values between 0 and 1
 	normx=x/(width*1.0)
 	normy=y/(height*1.0)
-	invalues[0]=normx
-	invalues[1]=normy
+	values[0]=[normx,normy]) #changing the inputs
 	#compute values of intermediate neurons
-	del intervalues[:]
-	for j in range(inter):
-		val=0.
-		for i in range(inputs):
-			val+=invalues[i]*weight1[i][j]
-		#apply activation function
-		val=activ(val)
-		intervalues.append(val)
-	#now compute output values
-	del outvalues[:]
-	for j in range(outputs):
-		val=0.
-		for i in range(inter):
-			val+=intervalues[i]*weight2[i][j]
-		#apply activation function
-		val=activ(val)
-		#scaling to obtain an integer between 0 and 255
-		outvalues.append(val)
+	for lay in range(layers+1):
+		inp,out=inout(lay)
+		for j in range(out):
+			val=0.
+			for i in range(inp):
+				val+=values[l][i]*weight[l][i][j]
+			#apply activation function
+			val=activ(val)
+			values[l+1][j]=val
 
 #get the color computed by the network
 def result():
@@ -115,17 +118,17 @@ def result():
 
 #i is the number of the output neuron, target the wanted value
 def delta_output(i, target):
-	val=outvalues[i]
+	val=values[layers+1][i]
 	return (val-target)*val*(1-val)
 
 #i is the number of the inner neuron, 
 #deltas the computed deltas for the next layer
 
-def delta_mid(i, deltas):
-	val=intervalues[i]
+def delta_mid(lay,i, deltas):
+	val=values[lay][i]
 	s=0
 	for j in range(len(deltas)):
-		s+= deltas[j]*weight2[i][j]
+		s+= deltas[j]*weight[lay][i][j]
 	return s*val*(1-val)
 
 
@@ -142,6 +145,10 @@ def backprop(x,y):
 	for i in range(outputs):
 		delta_out.append(delta_output(i,targets[i]))
 	delta_inter=[]
+	for lrev in range(layers):
+	#todo from here: reverse loop doing back propagation
+	##
+	##
 	for i in range(inter):
 		delta_inter.append(delta_mid(i,delta_out))
 	#changing the weights
