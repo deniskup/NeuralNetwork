@@ -12,14 +12,14 @@ from math import *
 
 # 2 inputs for coordinates x,y
 # 3 outputs for R,G,B
-# one intermediate layer, here 5 neurons
+# one intermediate layer
 
 inputs=2
-inter=int(raw_input("Neurones dans la couche intermediaire ? ")) # number of neurons on the intermediate layer
+inter=int(raw_input("Neurones dans la couche intermediaire ? ")) # number of neurons on the intermediate layer (5 OK)
 outputs=3
 
 
-#number of backpropagations
+#number of backpropagations, (100 000 OK)
 nrand=int(raw_input("Nombres de pixels pour l'entrainement ? "))
 
 weight1=[] #two-dimensional array for inputs to inter
@@ -31,7 +31,7 @@ intervalues=[]
 outvalues=[]
 
 #learning rate
-rate=.1
+rate=1
 
 
 #choose all weights randomly
