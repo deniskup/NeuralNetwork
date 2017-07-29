@@ -3,16 +3,24 @@
 
 #import modules
 from PIL import Image
-from random import random
+from random import *
 from math import *
+
+
+
+#### parametres du reseau ###########
 
 # 2 inputs for coordinates x,y
 # 3 outputs for R,G,B
 # one intermediate layer, here 5 neurons
 
 inputs=2
-inter=5 # number of neurons on the intermediate layer
+inter=int(raw_input("Neurones dans la couche intermediaire ? ")) # number of neurons on the intermediate layer
 outputs=3
+
+
+#number of backpropagations
+nrand=int(raw_input("Nombres de pixels pour l'entrainement ? "))
 
 weight1=[] #two-dimensional array for inputs to inter
 weight2=[] #two-dimensional array for inter to output
@@ -31,13 +39,13 @@ rate=.1
 for i in range(inputs):
  	wl=[]
  	for j in range(inter):
- 		wl.append(random()*10-5)
+ 		wl.append(random())
  	weight1.append(wl)
 #then weight2
 for i in range(inter):
  	wl=[]
  	for j in range(outputs):
- 		wl.append(random()*10-5)
+ 		wl.append(random())
  	weight2.append(wl)
  
 
@@ -56,11 +64,22 @@ def deriv(x):
 	return activ(x)*(1-activ(x))
 
 #load image to obtain size
-im = Image.open("colors.jpg")
+fichier=raw_input("Fichier image a ouvrir ? ")
+im=Image.open(fichier)
 (width,height)=im.size
 pixin=im.load()
 
-#run the neural network on inputs [x,y]
+
+#normalize a color from 0 to 255 to number between 0 and 1
+def normcol(c):
+	return c/(256*1.)
+	
+#get a color from the output of a network (between 0 and 1)
+def getcol(x):
+	return int(floor(x*256))
+
+#run the neural network on inputs [x,y], updates values of the network,
+# result stored in outvalues, not normalized
 def run(x,y):
 	#normalize the input to values between 0 and 1
 	normx=x/(width*1.0)
@@ -85,12 +104,12 @@ def run(x,y):
 		#apply activation function
 		val=activ(val)
 		#scaling to obtain an integer between 0 and 255
-		color=int(floor(val*256))
-		outvalues.append(color)
-		
-	#return the RGB triplet
-	return (outvalues[0],outvalues[1],outvalues[2])
+		outvalues.append(val)
 
+#get the color computed by the network
+def result():
+	colors=map(getcol,tuple(outvalues))
+	return tuple(colors)
 
 #delta functions for backpropagation, from wikipedia
 
@@ -109,11 +128,15 @@ def delta_mid(i, deltas):
 		s+= deltas[j]*weight2[i][j]
 	return s*val*(1-val)
 
-#backpropagation algorithm
+
+#backpropagation algorithm,
 def backprop(x,y):
-	run(x,y) #puts the right values of the neurons
+	#print "frontprop"
+	run(x,y) #puts the right values of the neurons, by forward propagation
+	#print "backprop"
 	tr,tg,tb= pixin[x,y] #pixel of the target image
-	targets=[tr,tg,tb]
+	#normalization of the colors to target values
+	targets=map(normcol,[tr,tg,tb])
 	#compute the deltas
 	delta_out=[]
 	for i in range(outputs):
@@ -132,23 +155,23 @@ def backprop(x,y):
 
 
 
-#number of backpropagations
-nback=10
 
-#do a round of backprops, one for each coordinate
-def backprops():
-	for x in range(width):
-		for y in range(height):
-			backprop(x,y)
 
-for i in range(nback):
-	backprops()
 
+print "random sampling..."
+for i in range(nrand):
+	x=randint(0,width-1)
+	y=randint(0,height-1)
+	backprop(x,y)
+
+	
 res=Image.new("RGB",(width,height))
 pixout=res.load()
 for x in range(width):
 	for y in range(height):
-		pixout[x,y]=run(x,y)
+		run(x,y)
+		pixout[x,y]=result()
+		#print pixout[x,y]
 
 res.show()
 

@@ -1,4 +1,8 @@
 *** Basiques ***
+
+name = raw_input("Comment tu t'appelles ? ")
+print "Salut",name
+
 if (condition):
 	instructions
 
