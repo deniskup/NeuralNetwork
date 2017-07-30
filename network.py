@@ -16,7 +16,7 @@ from math import *
 
 inputs=2
 layers=3 #int(raw_input("Nombre de couches internes ? ")) # number of intermediate layers
-inter=5 #int(raw_input("Neurones dans la couche intermediaire ? ")) # number of neurons on the intermediate layer (5 OK)
+inter=7 #int(raw_input("Neurones dans la couche intermediaire ? ")) # number of neurons on the intermediate layer (5 OK)
 outputs=3
 
 
@@ -67,7 +67,7 @@ def activ(x):
 
 
 #load image to obtain size
-fichier="circle.png" #raw_input("Fichier image a ouvrir ? ")
+fichier="colors.jpg" #raw_input("Fichier image a ouvrir ? ")
 im=Image.open(fichier)
 (width,height)=im.size
 pixin=im.load()
@@ -78,9 +78,9 @@ pixin=im.load()
 #run the neural network on inputs [x,y], updates values of the network,
 # result stored in outvalues, not normalized
 def run(x,y):
-	#normalize the input to values between 0 and 1
-	normx=x/(width*1.0)
-	normy=y/(height*1.0)
+	#normalize the input to values between -1 and 1
+	normx=x/(width*1.0)-.5
+	normy=y/(height*1.0)-.5
 	values[0]=[normx,normy] #charging the inputs
 	#compute values of intermediate neurons
 	for lay in range(layers+1):
