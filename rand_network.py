@@ -15,12 +15,12 @@ from math import *
 # one intermediate layer
 
 inputs=2
-inter=int(raw_input("Neurones dans la couche intermediaire ? ")) # number of neurons on the intermediate layer (5 OK)
+inter=5#int(raw_input("Neurones dans la couche intermediaire ? ")) # number of neurons on the intermediate layer (5 OK)
 outputs=3
 
 
 #number of backpropagations, (100 000 OK)
-nrand=int(raw_input("Nombres de pixels pour l'entrainement ? "))
+nrand=100000#int(raw_input("Nombres de pixels pour l'entrainement ? "))
 
 weight1=[] #two-dimensional array for inputs to inter
 weight2=[] #two-dimensional array for inter to output
