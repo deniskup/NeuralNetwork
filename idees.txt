@@ -5,4 +5,4 @@
    
 2) à tester pour voir si c'est mieux que random: faire tous les pixels, mais dans un ordre aléatoire ?
 
-
+3) parfois rajouter des couches semble moins bien, pourquoi ?

@@ -14,8 +14,8 @@ from math import *
 # 3 outputs for R,G,B
 # one intermediate layer, here 5 neurons
 
-inputs=2
-layers=3 #int(raw_input("Nombre de couches internes ? ")) # number of intermediate layers
+inputs=4
+layers=2 #int(raw_input("Nombre de couches internes ? ")) # number of intermediate layers
 inter=7 #int(raw_input("Neurones dans la couche intermediaire ? ")) # number of neurons on the intermediate layer (5 OK)
 outputs=3
 
@@ -67,7 +67,7 @@ def activ(x):
 
 
 #load image to obtain size
-fichier="colors.jpg" #raw_input("Fichier image a ouvrir ? ")
+fichier="float.jpg" #raw_input("Fichier image a ouvrir ? ")
 im=Image.open(fichier)
 (width,height)=im.size
 pixin=im.load()
@@ -79,9 +79,9 @@ pixin=im.load()
 # result stored in outvalues, not normalized
 def run(x,y):
 	#normalize the input to values between -1 and 1
-	normx=x/(width*1.0)-.5
-	normy=y/(height*1.0)-.5
-	values[0]=[normx,normy] #charging the inputs
+	normx=2*x/(width*1.0)-1
+	normy=2*y/(height*1.0)-1
+	values[0]=[normx,normy,normx*normx, normy*normy] #charging the inputs
 	#compute values of intermediate neurons
 	for lay in range(layers+1):
 		inp,out=inout(lay)
@@ -168,6 +168,7 @@ for i in range(nrand):
 	
 res=Image.new("RGB",(width,height))
 pixout=res.load()
+print "drawing picture..."
 for x in range(width):
 	for y in range(height):
 		run(x,y)
@@ -175,5 +176,6 @@ for x in range(width):
 		#print pixout[x,y]
 
 res.show()
+res.save("result.jpg")
 
 
