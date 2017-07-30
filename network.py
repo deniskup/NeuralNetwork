@@ -12,7 +12,7 @@ from math import *
 
 # 2 inputs for coordinates x,y
 # 3 outputs for R,G,B
-# one intermediate layer, here 5 neurons
+# 'layers' intermediate layers, with 'inter' neurons each
 
 inputs=2
 layers=2 #int(raw_input("Nombre de couches internes ? ")) # number of intermediate layers
