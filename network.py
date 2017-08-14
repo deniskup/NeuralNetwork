@@ -5,8 +5,7 @@
 from PIL import Image
 from random import *
 from math import *
-
-
+from images2gif import writeGif
 
 #### parametres du reseau ###########
 
@@ -16,20 +15,23 @@ from math import *
 
 inputs=2
 layers=2 #int(raw_input("Nombre de couches internes ? ")) # number of intermediate layers
-inter=7 #int(raw_input("Neurones dans la couche intermediaire ? ")) # number of neurons on the intermediate layer (5 OK)
+inter=10 #int(raw_input("Neurones dans la couche intermediaire ? ")) # number of neurons on the intermediate layer (5 OK)
 outputs=3
 
 
+#learning rate (1 OK)
+rate=1.2 #float(raw_input("Vitesse d'apprentissage ? "))
 
 #number of backpropagations (100 000 OK)
-nrand=100000 #int(raw_input("Nombres de pixels pour l'entrainement ? "))
+nrand=50000 #int(raw_input("Nombres de pixels pour l'entrainement ? "))
 
 #three dimensional array: weight[i][j][k] is the weight of layer i, from neuron j to neuron k
 # i can go from 0 to inter
 weight=[] 
 
 
-fichier=raw_input("Fichier image a ouvrir ? ")
+fichier="colors.jpg" #raw_input("Fichier image a ouvrir ? ")
+
 
 #values of the neurons
 #double dimension list: 0 is the input layer, 1 to layers is intermediate, layers+1 is the output layer
@@ -38,8 +40,6 @@ for lay in range(layers):
 	values.append([None]*inter) #intermediate layers
 values.append([None]*outputs) #outputs
 
-#learning rate (1 OK)
-rate=1 #float(raw_input("Vitesse d'apprentissage ? "))
 
 
 #number of inputs and outputs for a layer
@@ -73,6 +73,9 @@ im=Image.open(fichier)
 (width,height)=im.size
 pixin=im.load()
 
+#create ouptut image
+res=Image.new("RGB",(width,height))
+pixout=res.load()
 
 
 
@@ -158,18 +161,30 @@ def backprop(x,y):
 
 
 
+print "Random sampling..."
 
+#nombre d'images dans la video
+nb_img = 50
 
-print "random sampling..."
+video=[]
+
+modimg=nrand/nb_img
+
 for i in range(nrand):
 	x=randint(0,width-1)
 	y=randint(0,height-1)
 	backprop(x,y)
+	#if (i% modimg==0):
+	#	for x in range(width):
+	#		for y in range(height):
+	#			run(x,y)
+	#			pixout[x,y]=result()
+	#	video.append(res)
+
+#writeGif("video.gif",video, duration= 1)
 
 	
-res=Image.new("RGB",(width,height))
-pixout=res.load()
-print "drawing picture..."
+print "Drawing picture..."
 for x in range(width):
 	for y in range(height):
 		run(x,y)

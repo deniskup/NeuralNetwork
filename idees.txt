@@ -8,3 +8,7 @@
 3) parfois rajouter des couches semble moins bien, pourquoi ?
 
 4) souvent lignes verticales, où est la rupture de symétrie ?
+
+5) Optimisation pour le futur: batch learning (cf wikipedia)
+Au lieu de faire la backpropagation à chaque fois, on accumule les erreurs sur un "batch" d'inputs, puis on fait une backpropagation pour le batch.
+
