@@ -182,7 +182,6 @@ print "Random sampling..."
 #pour la video
 pygame.init()
 screen=pygame.display.set_mode(size)
-white= 211,255,255
 
 #afficher une image tous les combien
 period = nrand/nbimages
@@ -190,14 +189,12 @@ period = nrand/nbimages
 for i in range(nrand):
 	delta=compute_delta_out()
 	backprop(delta)
-	
+	pysurf=pygame.Surface(size)
 	if (i% period==0):
 		for x in range(width):
 			for y in range(height):
 				run(x,y)
-				pixout[x,y]=result()
-		raw_str=res.convert('RGBA').tostring("raw",'RGBA')
-		pysurf=pygame.image.frombuffer(raw_str,size,'RGBA')
+				pysurf.set_at((x,y),result())
 		screen.blit(pysurf,(0,0))
 		pygame.display.flip()
 
@@ -209,7 +206,7 @@ for x in range(width):
 		pixout[x,y]=result()
 		#print pixout[x,y]
 
-res.show()
+#res.show()
 res.save("result.jpg")
 
 
