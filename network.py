@@ -5,7 +5,8 @@
 from PIL import Image
 from random import *
 from math import *
-from images2gif import writeGif
+import pygame
+import numpy as np
 
 #### parametres du reseau ###########
 
@@ -24,6 +25,8 @@ rate=1.2 #float(raw_input("Vitesse d'apprentissage ? "))
 
 #number of backpropagations (100 000 OK)
 nrand=50000 #int(raw_input("Nombres de pixels pour l'entrainement ? "))
+
+nbimages=15 #nombre d'images a afficher dans la video
 
 #three dimensional array: weight[i][j][k] is the weight of layer i, from neuron j to neuron k
 # i can go from 0 to inter
@@ -68,10 +71,12 @@ def activ(x):
 	return 1/(1+exp(-x))
 
 
-#load image to obtain size
+#load image to obtain size, with PIL
 im=Image.open(fichier)
 (width,height)=im.size
+size=width,height
 pixin=im.load()
+
 
 #create ouptut image
 res=Image.new("RGB",(width,height))
@@ -163,25 +168,30 @@ def backprop(x,y):
 
 print "Random sampling..."
 
-#nombre d'images dans la video
-nb_img = 50
 
-video=[]
+#pour la video
+pygame.init()
+screen=pygame.display.set_mode(size)
+white= 211,255,255
 
-modimg=nrand/nb_img
+#afficher une image tous les combien
+period = nrand/nbimages
 
 for i in range(nrand):
 	x=randint(0,width-1)
 	y=randint(0,height-1)
 	backprop(x,y)
-	#if (i% modimg==0):
-	#	for x in range(width):
-	#		for y in range(height):
-	#			run(x,y)
-	#			pixout[x,y]=result()
-	#	video.append(res)
-
-#writeGif("video.gif",video, duration= 1)
+	
+	if (i% period==0):
+		for x in range(width):
+			for y in range(height):
+				run(x,y)
+				pixout[x,y]=result()
+		raw_str=res.convert('RGBA').tostring("raw",'RGBA')
+		pysurf=pygame.image.frombuffer(raw_str,size,'RGBA')
+		screen.fill(white)
+		screen.blit(pysurf,(0,0))
+		pygame.display.flip()
 
 	
 print "Drawing picture..."
