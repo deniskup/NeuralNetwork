@@ -25,6 +25,7 @@ rate=1.2 #float(raw_input("Vitesse d'apprentissage ? "))
 
 #number of backpropagations (100 000 OK)
 nrand=50000 #int(raw_input("Nombres de pixels pour l'entrainement ? "))
+batch_size=1 #number of pixels in each batch for backpropagation
 
 nbimages=15 #nombre d'images a afficher dans la video
 
@@ -132,18 +133,27 @@ def delta_mid(lay,i, delta_next):
 		s+= delta_next[j]*weight[lay][i][j]
 	return s*val*(1-val)
 
+#compute the delta_out from 'batch_size' random points
+def compute_delta_out():
+	delta_out=[0.0]*outputs
+	for bat in range(batch_size):
+		x=randint(0,width-1)
+		y=randint(0,height-1)
+		run(x,y) #puts the right values of the neurons, by forward propagation
+		#normalization of the colors to target values
+		targets=map(normcol,pixin[x,y])
+		#compute the deltas, starting from the output
+		for i in range(outputs):
+			delta_out[i]+=delta_output(i,targets[i])
+	for i in range(outputs):
+		delta_out[i]=delta_out[i]/batch_size
+	return delta_out
+		
+
 
 #backpropagation algorithm,
-def backprop(x,y):
-	run(x,y) #puts the right values of the neurons, by forward propagation
-	#normalization of the colors to target values
-	targets=map(normcol,pixin[x,y])
-	#compute the deltas, starting from the output
-	delta_out=[]
-	for i in range(outputs):
-		delta_out.append(delta_output(i,targets[i]))
+def backprop(delta_out):
 	#delta_out is the current "next layer delta"
-
 	delta_next=delta_out
 	for lay in reversed(range(1,layers+1)):
 	#back propagation of the deltas
@@ -178,9 +188,8 @@ white= 211,255,255
 period = nrand/nbimages
 
 for i in range(nrand):
-	x=randint(0,width-1)
-	y=randint(0,height-1)
-	backprop(x,y)
+	delta=compute_delta_out()
+	backprop(delta)
 	
 	if (i% period==0):
 		for x in range(width):
@@ -189,7 +198,6 @@ for i in range(nrand):
 				pixout[x,y]=result()
 		raw_str=res.convert('RGBA').tostring("raw",'RGBA')
 		pysurf=pygame.image.frombuffer(raw_str,size,'RGBA')
-		screen.fill(white)
 		screen.blit(pysurf,(0,0))
 		pygame.display.flip()
 
