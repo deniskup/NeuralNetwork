@@ -6,7 +6,6 @@ from PIL import Image
 from random import *
 from math import *
 import pygame
-import numpy as np
 
 #### parametres du reseau ###########
 
@@ -14,20 +13,20 @@ import numpy as np
 # 3 outputs for R,G,B
 # 'layers' intermediate layers, with 'inter' neurons each
 
-inputs=2
+inputs=4
 layers=2 #int(raw_input("Nombre de couches internes ? ")) # number of intermediate layers
-inter=10 #int(raw_input("Neurones dans la couche intermediaire ? ")) # number of neurons on the intermediate layer (5 OK)
+inter=5 #int(raw_input("Neurones dans la couche intermediaire ? ")) # number of neurons on the intermediate layer (5 OK)
 outputs=3
 
 
 #learning rate (1 OK)
-rate=1.2 #float(raw_input("Vitesse d'apprentissage ? "))
+rate=1 #float(raw_input("Vitesse d'apprentissage ? "))
 
 #number of backpropagations (100 000 OK)
-nrand=50000 #int(raw_input("Nombres de pixels pour l'entrainement ? "))
+nrand=100000 #int(raw_input("Nombres de pixels pour l'entrainement ? "))
 batch_size=1 #number of pixels in each batch for backpropagation
 
-nbimages=15 #nombre d'images a afficher dans la video
+nbimages=30 #nombre d'images a afficher dans la video
 
 #three dimensional array: weight[i][j][k] is the weight of layer i, from neuron j to neuron k
 # i can go from 0 to inter
@@ -91,7 +90,9 @@ def run(x,y):
 	#normalize the input to values between -1 and 1
 	normx=2*x/(width*1.0)-1
 	normy=2*y/(height*1.0)-1
-	values[0]=[normx,normy]#,normx*normx, normy*normy] #charging the inputs
+	values[0]=[normx,normy] #loading the inputs
+	if (inputs==4):
+		values[0]=[normx,normy,normx*normx, normy*normy] # squares as bonus inputs
 	#compute values of intermediate neurons
 	for lay in range(layers+1):
 		inp,out=inout(lay)
